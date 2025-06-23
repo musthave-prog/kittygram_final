@@ -1,66 +1,43 @@
-version: '3.8'
-
 volumes:
   pg_data:
   static:
   media:
-
-networks:
-  kittygram_net:
-    driver: bridge
 
 services:
   db:
     image: postgres:13
     volumes:
       - pg_data:/var/lib/postgresql/data
-    networks:
-      - kittygram_net
-    healthcheck:  # Проверка готовности БД
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+    env_file: .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U django_user"]
       interval: 5s
       timeout: 5s
       retries: 5
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      start_period: 10s
 
   backend:
-    build: ./backend/
+    image: dgeta1111/kittygram_backend
     env_file: .env
-    networks:
-      - kittygram_net
-    depends_on:  # Зависимость с проверкой здоровья
+    volumes:
+      - media:/app/media/
+      - static:/backend_static/static
+    depends_on:
       db:
         condition: service_healthy
-    environment:
-      DB_HOST: db  # Критически важная настройка
-      DB_PORT: 5432
-    # Порт 9000 не публикуем наружу
-    # ports:
-    #  - "9000:9000" 
 
   frontend:
-    build: ./frontend/
+    image: dgeta1111/kittygram_frontend
     env_file: .env
-    command: sh -c "cp -r /app/build/. /static/ && sleep infinity" 
     volumes:
       - static:/static
-      - media:/media
-    networks:
-      - kittygram_net
 
   gateway:
-    build: ./nginx/
-    env_file: .env
+    image: dgeta1111/kittygram_gateway
     ports:
-      - 80:80
+      - 9000:80
     volumes:
       - static:/static
-      - media:/media
-    networks:
-      - kittygram_net
     depends_on:
       - backend
       - frontend
