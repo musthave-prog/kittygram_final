@@ -1,27 +1,56 @@
-version: '3'
+version: '3.8'
 
 volumes:
   pg_data:
   static:
   media:
 
+networks:
+  kittygram_net:
+    driver: bridge
+
 services:
   db:
     image: postgres:13
     volumes:
       - pg_data:/var/lib/postgresql/data
+    networks:
+      - kittygram_net
+    healthcheck:  # Проверка готовности БД
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
   backend:
     build: ./backend/
     env_file: .env
-    ports:
-      - "9000:9000"
+    networks:
+      - kittygram_net
+    depends_on:  # Зависимость с проверкой здоровья
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db  # Критически важная настройка
+      DB_PORT: 5432
+    # Порт 9000 не публикуем наружу
+    # ports:
+    #  - "9000:9000" 
+
   frontend:
-    env_file: .env
     build: ./frontend/
-    command: cp -r /app/build/. /static/
+    env_file: .env
+    command: sh -c "cp -r /app/build/. /static/ && sleep infinity" 
     volumes:
-      - static:/app/static
-      - media:/app/media
+      - static:/static
+      - media:/media
+    networks:
+      - kittygram_net
+
   gateway:
     build: ./nginx/
     env_file: .env
@@ -29,4 +58,9 @@ services:
       - 80:80
     volumes:
       - static:/static
-      - media:/app/media
+      - media:/media
+    networks:
+      - kittygram_net
+    depends_on:
+      - backend
+      - frontend

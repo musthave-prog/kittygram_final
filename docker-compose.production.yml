@@ -1,7 +1,13 @@
+version: '3.8'
+
 volumes:
   pg_data_production:
   static_volume:
   media_volume:
+
+networks:
+  kittygram-net:
+    driver: bridge
 
 services:
   db:
@@ -9,18 +15,38 @@ services:
     env_file: .env
     volumes:
       - pg_data_production:/var/lib/postgresql/data
+    networks:
+      - kittygram-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U django_user -d kittygram"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
-    image: dgeta1111/kittygram_backend 
+    image: dgeta1111/kittygram_backend
     env_file: .env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
     volumes:
       - static_volume:/backend_static
       - media_volume:/app/media
+    networks:
+      - kittygram-net
+    depends_on:
+      db:
+        condition: service_healthy
+
   frontend:
     image: dgeta1111/kittygram_frontend
     env_file: .env
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static_volume:/frontend_static
+    networks:
+      - kittygram-net
+
   gateway:
     image: dgeta1111/kittygram_gateway
     env_file: .env
@@ -29,3 +55,5 @@ services:
       - media_volume:/media/
     ports:
       - 80:80
+    networks:
+      - kittygram-net
