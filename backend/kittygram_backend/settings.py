@@ -8,7 +8,7 @@ SECRET_KEY = 'django-insecure-cg6*%6d51ef8f#4!r3*$vmxm4)abgjw8mo!4y-q*uq1!4$-89$
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '84.201.176.204', '127.0.0.1', 'kittygramdarya.zapto.org', 'backend', 'gateway']
+ALLOWED_HOSTS = ['localhost', '84.201.176.204', '127.0.0.1', 'kittygramdarya.zapto.org', 'backend']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -59,8 +59,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'kittygram'),
         'USER': os.getenv('POSTGRES_USER', 'django_user'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'dg'),
-        'HOST': os.getenv('DB_HOST', 'db'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
         'PORT': os.getenv('DB_PORT', '5432')
     }
 }
