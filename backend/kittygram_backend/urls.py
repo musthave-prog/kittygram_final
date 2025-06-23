@@ -20,7 +20,7 @@ urlpatterns = [
     path('api/', include(router.urls)),  # REST API endpoints
     # Djoser endpoints
     path('api/auth/', include('djoser.urls')),  # Работа с пользователями
-    path('api/auth/token/', include('djoser.urls.authtoken')),  # Работа с токенами
+    path('api/auth/token/', include('djoser.urls.authtoken')),  # токены
 ]
 
 if settings.DEBUG:
