@@ -1,43 +1,31 @@
+version: '3'
 volumes:
   pg_data:
   static:
   media:
-
 services:
   db:
-    image: postgres:13
+    image: postgres:13.10
+    env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
-    env_file: .env
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U django_user"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-
   backend:
     image: dgeta1111/kittygram_backend
     env_file: .env
     volumes:
-      - media:/app/media/
-      - static:/backend_static/static
-    depends_on:
-      db:
-        condition: service_healthy
-
+      - static:/backend_static
+      - media:/app/media
   frontend:
-    image: dgeta1111/kittygram_frontend
     env_file: .env
+    image: dgeta1111/kittygram_frontend
+    command: cp -r /app/build/. /static/
     volumes:
       - static:/static
-
   gateway:
     image: dgeta1111/kittygram_gateway
+    env_file: .env
     ports:
       - 9000:80
     volumes:
       - static:/static
-    depends_on:
-      - backend
-      - frontend
+      - media:/media
