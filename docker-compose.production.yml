@@ -1,81 +1,27 @@
 volumes:
   pg_data:
   static:
+  media:
 
 services:
   db:
     image: postgres:13
-    restart: always
     volumes:
       - pg_data:/var/lib/postgresql/data
     env_file: .env
-
-  backend:
-    image: hayko19/foodgram_backend
-    restart: always
-    env_file: .env
-    depends_on:
-      - db
-    volumes:
-      - static:/backend_static
-      - ./media:/app/media
-
-  frontend:
-    image: hayko19/foodgram_frontend
-    restart: always
-    env_file: .env
-    depends_on:
-      - backend
-    volumes:
-      - static:/frontend_static
-
-  gateway:
-    image: hayko19/foodgram_nginx
-    restart: always
-    env_file: .env
-    depends_on:
-      - backend
-      - frontend
-    ports:
-      - 7000:80
-    volumes:
-      - static:/static  
-      - ./media:/app/media
-
-volumes:
-  pg_data_production:
-  static_volume:
-  media_volume:
-
-networks:
-  kittygram-net:
-    driver: bridge
-
-services:
-  db:
-    image: postgres:13.10
-    env_file: .env
-    volumes:
-      - pg_data_production:/var/lib/postgresql/data
-    networks:
-      - kittygram-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U django_user -d kittygram"]
+      test: ["CMD-SHELL", "pg_isready -U django_user"]
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 10s
 
   backend:
     image: dgeta1111/kittygram_backend
     env_file: .env
-    environment:
-      - DB_HOST=db
-      - DB_PORT=5432
     volumes:
-      - static_volume:/backend_static
-      - media_volume:/app/media
-    networks:
-      - kittygram-net
+      - media:/app/media/
+      - static:/backend_static/static
     depends_on:
       db:
         condition: service_healthy
@@ -83,11 +29,18 @@ services:
   frontend:
     image: dgeta1111/kittygram_frontend
     env_file: .env
-    command: cp -r /app/build/. /frontend_static/
     volumes:
-      - static_volume:/frontend_static
-    networks:
-      - kittygram-net
+      - static:/static
+
+  gateway:
+    image: dgeta1111/kittygram_gateway
+    ports:
+      - 9000:80
+    volumes:
+      - static:/static
+    depends_on:
+      - backend
+      - frontend
 
   gateway:
     image: dgeta1111/kittygram_gateway
