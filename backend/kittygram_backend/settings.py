@@ -6,9 +6,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-cg6*%6d51ef8f#4!r3*$vmxm4)abgjw8mo!4y-q*uq1!4$-89$'
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '84.201.176.204', '127.0.0.1', 'kittygramdarya.zapto.org']
+ALLOWED_HOSTS = ['localhost', '84.201.176.204', '127.0.0.1', 'kittygramdarya.zapto.org', 'backend', 'gateway']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -117,12 +117,3 @@ REST_FRAMEWORK = {
 
 }
 
-# Security
-CSRF_TRUSTED_ORIGINS = [
-    "http://kittygramdarya.zapto.org",
-    "https://kittygramdarya.zapto.org"
-]
-
-# Для работы через прокси
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
