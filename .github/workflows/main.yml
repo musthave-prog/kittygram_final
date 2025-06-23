@@ -2,7 +2,7 @@ name: Main Kittygram workflow
 
 on:
   push:
-    branches:
+    branches:More actions
       - main
 
 jobs:
@@ -62,7 +62,7 @@ jobs:
           context: ./backend/
           push: true
           tags: dgeta1111/kittygram_backend:latest
-  
+
   frontend_tests:
     runs-on: ubuntu-latest
     steps:
@@ -101,7 +101,7 @@ jobs:
           context: ./frontend/
           push: true
           tags: dgeta1111/kittygram_frontend:latest
-  
+
   build_gateway_and_push_to_docker_hub:
     name: Push gateway Docker image to DockerHub
     runs-on: ubuntu-latest
@@ -148,9 +148,10 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
           cd kittygram
+          echo "${{ secrets.ENV_FILE }}" > .env
           sudo docker compose -f docker-compose.production.yml pull
-          sudo docker compose -f docker-compose.production.yml down
-          sudo docker compose -f docker-compose.production.yml up -d
+          sudo docker compose -f docker-compose.production.yml down -v
+          sudo docker compose -f docker-compose.production.yml up -d --build
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
           sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
