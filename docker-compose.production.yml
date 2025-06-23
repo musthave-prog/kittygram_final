@@ -15,6 +15,8 @@ services:
       - pg_data:/var/lib/postgresql/data
   backend:
     image: dgeta1111/kittygram_backend
+    ports:
+      - "8000:8000" 
     env_file: .env
     volumes:
       - static:/backend_static/
@@ -32,4 +34,4 @@ services:
       - 9000:80
     volumes:
       - static:/static
-      - media:/static/media/cats/images/
+      - media:/media
