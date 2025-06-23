@@ -1,4 +1,3 @@
-# flake8: noqa
 import os
 from pathlib import Path
 
@@ -116,3 +115,13 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 
 }
+
+# Security
+CSRF_TRUSTED_ORIGINS = [
+    "http://kittygramdarya.zapto.org",
+    "https://kittygramdarya.zapto.org"
+]
+
+# Для работы через прокси
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
