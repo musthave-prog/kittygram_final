@@ -1,0 +1,39 @@
+* [33m2c6d597[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m 17
+* [33mba2f36d[m 16
+* [33m7aaa74f[m 15
+* [33mf6b359a[m 14
+* [33mda18d6b[m 13
+* [33m66fc91c[m 12
+* [33m35000fe[m 11
+* [33m5017183[m 10
+* [33m5fb5bc1[m 9
+* [33m175d739[m dock8
+* [33ma17fa2c[m docke7
+* [33m7089895[m docke6
+* [33ma0e27e5[m docke5
+* [33m7340075[m docker4
+* [33m0ca6af5[m docker3
+* [33m97ddb10[m docker1
+* [33mf8f4c73[m docker
+* [33m5671e08[m docker
+* [33m2801df4[m dacker
+* [33m09c3db6[m front_docker
+* [33m361b250[m ngindx3
+* [33mec2ffa9[m ngindx2
+* [33mbb09c78[m ngindx
+* [33me867257[m settings_noqa
+* [33m934fd10[m settings_and_docker
+* [33m915f504[m settings
+* [33ma0f46d6[m ports
+* [33m95ee968[m urls
+* [33m3e10275[m settings_and_urls
+* [33m82672a1[m static in main.yml
+* [33mdcf2c91[m static
+* [33m862b045[m docker-compose.yml
+* [33m66e594c[m backend/Dockerfile
+* [33m3021ae8[m --build
+* [33m69b9dda[m docker-compose.production.yml
+* [33m7b1600e[m main.yml
+* [33ma159b97[m 2 commit
+* [33m8ac11af[m first commit
+* [33m3f0f435[m Initial commit
