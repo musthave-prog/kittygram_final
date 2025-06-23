@@ -13,6 +13,8 @@ services:
   backend:
     build: ./backend/
     env_file: .env
+    ports:
+      - "9000:9000"
   frontend:
     env_file: .env
     build: ./frontend/
@@ -24,7 +26,7 @@ services:
     build: ./nginx/
     env_file: .env
     ports:
-      - 9000:80
+      - 80:80
     volumes:
       - static:/static
       - media:/app/media
