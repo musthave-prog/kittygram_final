@@ -1,52 +1,33 @@
-version: '3'More actions
+version: '3'
 
 volumes:
-  pg_data:
-  static:
-  media:
+  pg_data_production:
+  static_volume:
+  media_volume:
 
 services:
   db:
-    image: postgres:13
+    image: postgres:13.10
     env_file: .env
     volumes:
-      - pg_data:/var/lib/postgresql/data
-    networks:
-      - kittygram_net
-
+      - pg_data_production:/var/lib/postgresql/data
   backend:
     image: dgeta1111/kittygram_backend
     env_file: .env
-    ports:
-      - "8000:8000"
     volumes:
-      - static:/backend_static/
-      - media:/app/media/cats/images/
-    networks:
-      - kittygram_net
-
-  frontend:    
+      - static_volume:/backend_static
+      - media_volume:/media
+  frontend:
     image: dgeta1111/kittygram_frontend
     env_file: .env
-    command: sh -c "cp -r /app/build/. /static/ && nginx -g 'daemon off;'"
+    command: cp -r /app/build/. /frontend_static/
     volumes:
-      - static:/static
-    networks:
-      - kittygram_net
-
+      - static_volume:/frontend_static
   gateway:
     image: dgeta1111/kittygram_gateway
     env_file: .env
-    ports:
-      - "80:80"
     volumes:
-      - static:/static
-      - media:/app/media
-    depends_on:
-      - backend
-    networks:
-      - kittygram_net
-
-networks:
-  kittygram_net:
-    driver: bridge
+      - static_volume:/static/
+      - media_volume:/media/
+    ports:
+      - ${PORT}:80
