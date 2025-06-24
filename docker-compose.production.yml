@@ -30,4 +30,4 @@ services:
       - static_volume:/static/
       - media_volume:/media/
     ports:
-      - ${PORT}:80
+      - ${{ secrets.PORT }}:80

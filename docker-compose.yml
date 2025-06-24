@@ -29,7 +29,7 @@ services:
     build: ./nginx/
     env_file: .env
     ports:
-      - ${PORT}:80
+      - ${{ secrets.PORT }}:80
     volumes:
       - static:/static
       - media:/media
